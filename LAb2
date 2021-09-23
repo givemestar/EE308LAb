@@ -1,0 +1,8 @@
+#include <fstream>
+#include <string>
+#include <iostream>
+#include <sstream>
+#include <cstring>
+using namespace std;
+int main()
+{	
