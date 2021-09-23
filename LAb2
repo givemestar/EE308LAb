@@ -1,8 +1,154 @@
-#include <fstream>
-#include <string>
-#include <iostream>
-#include <sstream>
-#include <cstring>
+#include<iostream>
+#include<stdio.h>
+#include<vector>
+#include<fstream>
+#include<stack>
 using namespace std;
-int main()
+
+vector<int> Case;
+stack<int> IfElse_stack;
+stack<char> IfElse_charstack;
+
+string Text;
+string tmp;
+int else_flag = 0;
+int divide_if_flag = 0;
+
+int IfElse_level = 0;
+int Tot= 0;
+int Switch = 0;
+int Scase= 0;
+
+int IfElse= 0;
+int IfElse2= 0;
+
+
+
+
+string keyword[32]={"auto","break","case","char","const","continue","default","double","do","else","enum",
+"extern","float","for","goto","if","int","long","register","return","short","signed",
+"sizeof","static","struct","switch","typedef","union","unsigned","void","volatile","while"};
+void keywordSearch(string s)
 {	
+	int l = s.size();
+	if (l <= 1){
+		return;
+	}
+	for (int i = 0; i <= 31; i++){
+		if (s == keyword[i]){
+			if (s == "switch"){
+				Case.push_back(Scase);
+				Switch++;
+				Scase= 0;
+			}
+			if (s == "case"){
+				Scase++;
+			}
+			Tot++;
+			break;
+		}
+	}
+	return;
+}
+
+void IfElse(string s,int level)
+{
+	int if_1 = 0;
+	char if_char_1 = 'i';
+	int IfElse2 = 0;
+	if (s == "if") {
+		IfElse_charstack.push('i');
+		IfElse_stack.push(level);
+	}
+	else if (s == "else_if")
+	{
+		IfElse_charstack.push('c');
+		IfElse_stack.push(level);
+	}
+	else if (s == "else")
+	{
+		if_1 = IfElse_stack.top();
+		while (!IfElse_charstack.empty()&&IfElse_charstack.top() != 'i')
+		{
+			IfElse2 = 1;
+			IfElse_charstack.pop();
+			IfElse_stack.pop();
+		}
+		while (!IfElse_stack.empty() && if_1 ==IfElse_stack.top()){
+			IfElse_stack.pop();
+			IfElse_charstack.pop();
+		}
+		if (IfElse2 == 1){
+			IfElse2_num++;
+		}
+		else{
+			IfElse_num++;
+		}
+	}
+}
+int main()
+{
+	int Find_type;
+	string File_p;
+	cout << "file" << endl;
+	cin >> File_p;
+	cout << "level：   " << endl;
+	cout << "1- Total" << endl;
+	cout << "2- switch&case" << endl;
+	cout << "3- if_else" << endl;
+	cout << "4- if_elseif_if" << endl;
+	cin >> Find_type;
+	ifstream finput("lab2.cpp");
+	while (finput >> Text)
+	{
+		String_trim();
+
+	}
+	if (tmp == "else")
+	{
+		IfElse_judge("else",0);
+		tmp = "\0";
+		else_flag = 0;
+	}
+	cout << "Total num = " << Total_num ;
+	if (Find_type != 1)
+	{
+		cout << endl;
+	}
+	if (Find_type >= 2)
+	{
+		cout << "Switch num = " << Switch<< endl;
+		if (!Case.empty())
+		{
+			Case.push_back(Scase);
+		}
+		else
+		{
+			Case_num.push_back(0);
+		}
+		cout << "Case = ";
+			for (int i = 1; i <= Switch; i++)
+			{
+				cout << Case[i] << " ";
+
+			}
+			if (Find_type != 2)
+			{
+				cout << endl;
+			}
+	}
+	if (Find_type >= 3)
+	{
+		cout << "if_else num = " << IfElse ;
+		if (Find_type != 3)
+		{
+			cout << endl;
+		}
+	}
+	if (Find_type >= 4)
+	{
+		cout << "if_else_if num = " << IfElse2;
+	}
+	finput.close();
+	return 0;
+}
